@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AuditLogServiceImpl implements AuditLogService {
@@ -45,6 +47,16 @@ public class AuditLogServiceImpl implements AuditLogService {
         log.setNoteId(noteId);
         log.setTimestamp(LocalDateTime.now());
         auditLogRepository.save(log);
+    }
+
+    @Override
+    public List<AuditLog> getAllAudits() {
+        return auditLogRepository.findAll();
+    }
+
+    @Override
+    public List<AuditLog> getAllAuditForNote(Long id) {
+        return auditLogRepository.findByNoteId(id);
     }
 
 }
