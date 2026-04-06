@@ -11,6 +11,7 @@ import com.example.notes.security.request.SignUpRequest;
 import com.example.notes.security.response.LoginResponse;
 import com.example.notes.security.response.MessageResponse;
 import com.example.notes.security.response.UserInfoResponse;
+import com.example.notes.security.services.UserDetailsImpl;
 import com.example.notes.security.services.UserDetailsServiceImpl;
 import com.example.notes.services.TotpService;
 import com.example.notes.services.UserService;
@@ -82,7 +83,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         //Specific to our implementation
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
         String jwtToken = jwtUtils.generateTokenFromUsername(userDetails);
 
@@ -225,7 +226,7 @@ public class AuthController {
         } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid 2FA Code");
     }
 
-    @PostMapping("/user/2fa-status")
+    @GetMapping("/user/2fa-status")
     public ResponseEntity<?> get2FAStatus(){
         User user = authUtil.loggedInUser();
         if (user != null){
