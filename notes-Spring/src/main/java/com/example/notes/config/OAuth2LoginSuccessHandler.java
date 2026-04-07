@@ -18,6 +18,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -50,7 +51,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) authentication;
         if ("github".equals(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId()) || "google".equals(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId())) {
-            DefaultOAuth2User principal = (DefaultOAuth2User) authentication.getPrincipal();
+            OAuth2User principal = (OAuth2User) authentication.getPrincipal();
             Map<String, Object> attributes = principal.getAttributes();
             String email = attributes.getOrDefault("email", "").toString();
             String name = attributes.getOrDefault("name", "").toString();
@@ -68,7 +69,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
             userService.findByEmail(email)
                     .ifPresentOrElse(user -> {
-                        DefaultOAuth2User oauthUser = new DefaultOAuth2User(
+                        OAuth2User oauthUser = new DefaultOAuth2User(
                                 List.of(new SimpleGrantedAuthority(user.getRole().getRoleName().name())),
                                 attributes,
                                 idAttributeKey
@@ -108,7 +109,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         this.setAlwaysUseDefaultTargetUrl(true);
 
         // JWT TOKEN LOGIC
-        DefaultOAuth2User oauth2User = (DefaultOAuth2User) authentication.getPrincipal();
+        OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = oauth2User.getAttributes();
 
         // Extract necessary attributes

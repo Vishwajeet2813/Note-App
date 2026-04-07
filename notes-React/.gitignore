@@ -1,6 +1,5 @@
-# Node
-node_modules/
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
 # dependencies
 node_modules
 /.pnp
@@ -39,23 +38,3 @@ service-worker.js
 # Temporary files
 .tmp/
 node_modules
-build/
-
-# Java
-resources/
-application.properties
-target/
-*.class
-
-# Logs
-*.log
-
-# OS
-.DS_Store
-
-# Env files
-.env.development
-
-# IDE
-.vscode/
-.idea/
